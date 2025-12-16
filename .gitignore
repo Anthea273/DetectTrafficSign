@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual env
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Env
+.env
+
+# Training / outputs
+runs/
+outputs/
+results/
+logs/
+*.log
+
+# Dataset (KHÔNG up)
+data/
+datasets/
