@@ -18,10 +18,3 @@ Thumbs.db
 # Env
 .env
 
-# Training / outputs
-runs/
-outputs/
-results/
-logs/
-*.log
-

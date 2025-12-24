@@ -1,0 +1,5 @@
+class_name,best_confidence,count
+No Entry,0.9864,531
+Right Turn Only,0.9376,456
+No Stopping and No Parking,0.5118,30
+Bus Stop,0.2983,1
