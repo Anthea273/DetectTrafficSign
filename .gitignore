@@ -25,6 +25,3 @@ results/
 logs/
 *.log
 
-# Dataset (KHÔNG up)
-data/
-datasets/
