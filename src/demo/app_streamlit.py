@@ -506,6 +506,7 @@ if mode.startswith("1️⃣"):
 
                 stframe = st.empty()
                 status_box = st.empty()
+                realtime_box = st.empty()  # realtime results per-frame
 
                 all_detections = {}
                 frame_idx = 0
@@ -560,6 +561,12 @@ if mode.startswith("1️⃣"):
                     if dt > 0:
                         fps = 1.0 / dt
                         frame_times.append(fps)
+
+                    # --- REALTIME TABLE (current frame only) ---
+                    if len(detections_this_frame) > 0:
+                        realtime_box.dataframe(pd.DataFrame(detections_this_frame), use_container_width=True)
+                    else:
+                        realtime_box.info("Frame này không phát hiện biển báo.")
 
                     frame_rgb = cv2.cvtColor(draw_frame, cv2.COLOR_BGR2RGB)
                     stframe.image(
@@ -828,6 +835,8 @@ else:
 
             cap = cv2.VideoCapture(tfile.name)
             stframe = st.empty()
+            st.markdown("### 📌 Realtime results (current frame)")
+            realtime_tbl = st.empty()
 
             all_stats = {}            # summary theo Final_label
             fps_list = []             # FPS từng frame
@@ -846,6 +855,7 @@ else:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 results = yolo_model(frame_rgb)[0]
                 draw = frame.copy()
+                frame_rows = []  # realtime rows for this frame
 
                 # Nếu không có box → vẫn tính time + fps + show frame
                 if len(results.boxes) == 0:
@@ -856,6 +866,7 @@ else:
 
                     cv2.putText(draw, f"FPS: {fps:.1f}", (10, 25),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+                    realtime_tbl.info("Frame này không có detection.")
                     stframe.image(draw, channels="BGR")
                     continue
 
@@ -926,6 +937,7 @@ else:
                     if SHOW_TOP5:
                         row["Top5"] = top5_str
                     video_rows.append(row)
+                    frame_rows.append(row)
 
                 # FPS + frame time (tính 1 lần sau khi xử lý xong frame)
                 dt = time.time() - t0
@@ -937,6 +949,12 @@ else:
                 # Vẽ FPS lên khung hình
                 cv2.putText(draw, f"FPS: {fps:.1f}", (10, 25),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+
+                # --- REALTIME TABLE (current frame only) ---
+                if len(frame_rows) > 0:
+                    realtime_tbl.dataframe(pd.DataFrame(frame_rows), use_container_width=True)
+                else:
+                    realtime_tbl.info("Frame này không có detection.")
 
                 stframe.image(draw, channels="BGR")
 
@@ -1077,7 +1095,4 @@ else:
                     file_name="mode3_webcam_latest.csv",
                     mime="text/csv"
                 )
-
-
-
 
